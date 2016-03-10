@@ -1,3 +1,7 @@
+function cleanName(name) {
+  return name.replace(/[^\w\_-]+/g, '-').replace(/--/g, '-').toLowerCase();
+}
+
 function CaptureClient(config) {
   if (config) {
     this.config = config;
@@ -24,7 +28,7 @@ CaptureClient.prototype.capture = function(endpoint, metadata) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", this.config.serverURL + endpoint, false);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-  xhr.send("captureClientID=" + this.config.clientID);
+  xhr.send("captureClientID=" + this.config.clientID + '&module=' + myCaptureClient.moduleName);
 }
 
 CaptureClient.prototype.captureScreenshot = function(metadata) {
@@ -45,4 +49,8 @@ Ember.run.backburner.options.render = {
 // Notify capture-server when all tests are complete.
 QUnit.done(function(details) {
   myCaptureClient.captureDone(details);
+});
+
+QUnit.testStart(function(details) {
+  myCaptureClient.moduleName = cleanName(details.module) + '--' + cleanName(details.name);
 });
