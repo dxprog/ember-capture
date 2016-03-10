@@ -18,8 +18,7 @@ module.exports = {
 
     if (app.tests) {
       app.import(path.join('vendor', 'ember-capture', 'capture-client.js'), {
-        type: 'test',
-        prepend: true
+        type: 'test'
       });
     }
   },
